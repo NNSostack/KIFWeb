@@ -5,5 +5,5 @@ function Afdeling()
 }
 
 $(document).ready(function () {
-    $('#iframe').attr('src', 'http://kif.noerup-sostack.dk/holdliste.aspx?afdeling=' + Afdeling());
+    $('#iframe').attr('src', 'http://noerup-sostack.dk/kif/holdliste.aspx?afdeling=' + Afdeling());
 });
