@@ -36,14 +36,14 @@ Kauslunde fodbold";
 
         String mail = txtTestMail.Text;
 
-        //if (String.IsNullOrEmpty(mail))
-        //    mail = medlem.Email;
+        if (String.IsNullOrEmpty(mail))
+            mail = medlem.Email;
 
         if (mail == "")
             throw new ApplicationException("No email");
 
 
-        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, "Kontingentopkrævning for '" + medlem.Navn + "' - " + medlem.Årgang, "");
+        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, "Kontingentopkrævning for '" + medlem.Navn, "");
         mm.Body = GetBody(medlem);
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;
@@ -86,7 +86,6 @@ Kauslunde fodbold";
                 try
                 {
                     SendMail(medlem);
-                    return;
                 }
                 catch (Exception ex)
                 {
