@@ -43,7 +43,7 @@ Kauslunde fodbold";
             throw new ApplicationException("No email");
 
 
-        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, "Kontingentopkrævning for '" + medlem.Navn, "");
+        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, "Kontingentopkrævning for '" + medlem.Navn + "'", "");
         mm.Body = GetBody(medlem);
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;
