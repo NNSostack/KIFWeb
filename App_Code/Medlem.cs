@@ -8,12 +8,15 @@ public class Medlem
 {
     public String Navn { get; set; }
     public String Årgang { get; set; }
+    public String Fødselsdato { get; set; }
     public String Email { get; set; }
     public String Telefon { get; set; }
     public String Adresse { get; set; }
     public String MemberId { get; set; }
+    public String Postnummer { get; set; }
+    public String By { get; set; }
 
-    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr;
+    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer;
 
     public static void Initialize(String line)
     {
@@ -41,6 +44,12 @@ public class Medlem
                 afdeling = i;
             else if (s == "Medlemsnr.")
                 medlemsNr = i;
+            else if (s == "Fødselsdato")
+                fødselsdato = i;
+            else if (s == "By")
+                by = i;
+            else if (s == "Postnr.")
+                postnummer = i;
 
         }
     }
@@ -64,6 +73,9 @@ public class Medlem
         m.Telefon = m.Telefon.Replace(" ", "");
         m.Adresse = split[adresse];
         m.MemberId = split[medlemsNr];
+        m.Fødselsdato = split[fødselsdato];
+        m.Postnummer = split[postnummer];
+        m.By = split[by];
 
         return m;
     }
