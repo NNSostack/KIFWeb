@@ -115,7 +115,11 @@ Kauslunde fodbold";
         txtSecurity.Text = "";
         String aargang = "";
 
-        foreach (var medlem in Medlem.GetMedlemmer().OrderBy(x => x.Årgang))
+        var list = Medlem.GetMedlemmer().OrderBy(x => x.Årgang).ToList();
+        if (txtTestMail.Text != "")
+            list = list.Skip(3).ToList();
+
+        foreach (var medlem in list)
         {
             if (aargang != medlem.Årgang)
             {
@@ -128,6 +132,8 @@ Kauslunde fodbold";
             try
             {
                 SendMail(medlem);
+                if( txtTestMail.Text != "" )
+                    return;
             }
             catch (Exception ex)
             {

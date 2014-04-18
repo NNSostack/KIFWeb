@@ -86,6 +86,8 @@ Kauslunde fodbold";
                 try
                 {
                     SendMail(medlem);
+                    if (txtTestMail.Text != "")
+                        return;
                 }
                 catch (Exception ex)
                 {

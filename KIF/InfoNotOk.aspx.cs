@@ -36,6 +36,8 @@ public partial class KIF_InfoNotOk : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        InfoUpdated = false; 
+
         String memberId = MemberId;
         Guid g = Guid;
         if (!String.IsNullOrEmpty(memberId) && g != Guid.Empty )
@@ -45,13 +47,14 @@ public partial class KIF_InfoNotOk : System.Web.UI.Page
             if( System.IO.File.Exists(path) ) 
             {
                 Valid = true;
-
                 var medlem = Medlem.GetMedlemmer().FirstOrDefault(x => x.MemberId == memberId);
                 
                 if( medlem != null )
                 {
                     if (!IsPostBack)
                     {
+                        
+
                         txtAddress.Text = medlem.Adresse;
                         txtName.Text = medlem.Navn;
                         txtCity.Text = medlem.By;
@@ -97,15 +100,19 @@ public partial class KIF_InfoNotOk : System.Web.UI.Page
 
     protected void confirmInfo_Click(object sender, EventArgs e)
     {
+        String path = Server.MapPath("~/App_Data/KIF/InfoChecks/" + MemberId + "-" + Guid + ".txt");
+
+        if (!System.IO.File.Exists(path))
+            return;
+
         if (txtName.Text != "" && txtAddress.Text != "" && txtEmail.Text != "" && txtZip.Text != "" &&
             txtCity.Text != "" && txtPhone.Text != "" && cal.SelectedDate.Date != DateTime.MinValue.Date)
         {
             var medlem = Medlem.GetMedlemmer().FirstOrDefault(x => x.MemberId == MemberId);
             SendMail(medlem);
-            String path = Server.MapPath("~/App_Data/KIF/InfoChecks/" + MemberId + "-" + Guid + ".txt");
+            
             System.IO.File.Delete(path);
             InfoUpdated = true;
-            
         }
         else
             Response.Write("ALLE informationerne skal udfyldes");

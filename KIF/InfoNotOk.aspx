@@ -20,6 +20,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        
     <asp:PlaceHolder runat="server" Visible="<%# InfoUpdated %>">
         <h2>Informationerne er nu opdateret. Tak for hjælpen.</h2>
     </asp:PlaceHolder>
