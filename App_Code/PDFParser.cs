@@ -36,6 +36,12 @@ public class PDFParser
         return System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Medlemskontingenter.pdf");
     }
 
+    String GetGiroKortPath(String memberId)
+    {
+        String outfile = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/KIF/GiroKort/" + memberId + ".pdf");
+        return outfile;
+    }
+
 
     public Boolean InvoiceExists(String memberNumber)
     {
@@ -44,8 +50,14 @@ public class PDFParser
 
     public String GetInvoice(String memberNumber)
     {
-        String outfile = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/KIF/GiroKort/" + memberNumber + ".pdf");
+        String outfile = GetGiroKortPath(memberNumber);
         return GetInvoice(GetInvoicePath(), outfile, memberNumber) ? outfile : null; 
+    }
+
+    public Boolean HasGiroKortBeenDownloaded(String memberNumber)
+    {
+        String outfile = GetGiroKortPath(memberNumber);
+        return System.IO.File.Exists(outfile);
     }
     
     #region ExtractText

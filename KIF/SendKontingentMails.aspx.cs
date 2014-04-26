@@ -106,4 +106,15 @@ Kauslunde fodbold";
         var medlem = Medlem.GetMedlemmer().Skip(5).Take(1).First();  
         Response.Write(GetBody(medlem));  
     }
+    protected void showNoDownload_Click(object sender, EventArgs e)
+    {
+        PDFParser parser = new PDFParser();
+        var list = Medlem.GetMedlemmer().Where(x => !parser.HasGiroKortBeenDownloaded(x.MemberId)).OrderBy(x => x.Årgang).ThenBy(x => x.Navn);
+
+        var fritaget = list.Where(x => x.Kontingentfritagelse).ToList();
+        rptFritaget.DataSource = fritaget;
+        rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse).ToList();
+        
+        DataBind();
+    }
 }

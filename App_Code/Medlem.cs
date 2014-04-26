@@ -15,8 +15,9 @@ public class Medlem
     public String MemberId { get; set; }
     public String Postnummer { get; set; }
     public String By { get; set; }
+    public Boolean Kontingentfritagelse { get; set; }
 
-    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer;
+    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer, kontingentfritagelse;
 
     public static void Initialize(String line)
     {
@@ -50,6 +51,8 @@ public class Medlem
                 by = i;
             else if (s == "Postnr.")
                 postnummer = i;
+            else if (s == "Kontingentfritagelse")
+                kontingentfritagelse = i;
 
         }
     }
@@ -76,6 +79,11 @@ public class Medlem
         m.Fødselsdato = split[fødselsdato];
         m.Postnummer = split[postnummer];
         m.By = split[by];
+
+        Boolean b;
+
+        if (split[kontingentfritagelse].ToLower() == "ja")
+            m.Kontingentfritagelse = true;
 
         return m;
     }
