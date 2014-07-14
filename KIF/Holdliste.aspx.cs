@@ -60,7 +60,7 @@ public partial class Holdliste : System.Web.UI.Page
         String[] split = email.Split('@');
 
         if( !String.IsNullOrEmpty(email) )
-            allMail = allMail + email + ";";
+            allMail = allMail + email + ",";
 
         if (split.Length == 2)
             return String.Format(format, split[0], split[1]);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Web;
@@ -9,6 +10,13 @@ using System.Web.UI.WebControls;
 
 public partial class KIF_SendKontingentMails : System.Web.UI.Page
 {
+    protected String allEmails = "";
+
+    protected String SetEmail(String email)
+    {
+        allEmails += email + ",";
+        return "";
+    }
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -71,7 +79,7 @@ Kauslunde fodbold";
         PDFParser parser = new PDFParser();
         String aargang = "";
 
-        foreach (var medlem in Medlem.GetMedlemmer().OrderBy(x => x.Årgang))
+        foreach (var medlem in Medlem.GetMedlemmer().Where(x => txtMedlemsnummer.Text == "" || txtMedlemsnummer.Text == x.MemberId).OrderBy(x => x.Årgang))
         {
             if (aargang != medlem.Årgang)
             {
@@ -113,8 +121,37 @@ Kauslunde fodbold";
 
         var fritaget = list.Where(x => x.Kontingentfritagelse).ToList();
         rptFritaget.DataSource = fritaget;
-        rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse).ToList();
-        
+        rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse && parser.InvoiceExists(x.MemberId)).ToList();
+        rptNoInvoice.DataSource = list.Where(x => !x.Kontingentfritagelse && !parser.InvoiceExists(x.MemberId)).ToList(); 
         DataBind();
     }
+    protected void cmdGetGiroKort_Click(object sender, EventArgs e)
+    {
+        PDFParser parser = new PDFParser();
+        var list = Medlem.GetMedlemmer().Where(x => !parser.HasGiroKortBeenDownloaded(x.MemberId)).OrderBy(x => x.Årgang).ThenBy(x => x.Navn);
+
+        foreach( var medlem in list )
+        {
+            String medlemsNummer = medlem.MemberId;
+            var source = PDFParser.GetGiroKortPathForPrint(medlemsNummer);
+            String outfile = parser.GetInvoice(medlemsNummer, source, PDFParser.GetInvoicePathNoFrames());
+            if (outfile != null)
+            {
+                System.IO.File.Move(outfile, outfile.Replace(medlemsNummer, medlem.Årgang + "-" + medlemsNummer));
+
+                if (!String.IsNullOrEmpty(outfile))
+                {
+                    TheDownload("http://" + Request.Url.Host + ":" + Request.Url.Port + "/Upload/KIF/" + medlemsNummer.ToString() + ".pdf", txtDownloadPath.Text + "\\" + medlemsNummer.ToString() + ".pdf");
+                }
+                else
+                    Response.Write("Intet girokort fundet for medlem");
+            }
+        }
+    }
+
+    public void TheDownload(String source,  string target)
+    {
+        //WebClient client = new WebClient();
+        //client.DownloadFile(source, target); 
+    } 
 }
