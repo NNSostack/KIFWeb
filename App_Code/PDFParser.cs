@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 /// <summary>
@@ -31,9 +32,44 @@ public class PDFParser
 
     #endregion
 
+    String _invoicePath = null;
     String GetInvoicePath()
     {
-        return System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Medlemskontingenter.pdf");
+        if (_invoicePath == null)
+        {
+            _invoicePath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Medlemskontingenter.pdf");
+         
+            WebClient client = new WebClient();
+
+            try
+            {
+                client.DownloadFile("https://dl.dropboxusercontent.com/s/wf28l4ajad0b8b1/Medlemskontingenter.pdf?dl=1&token_hash=AAG5LdLruF-7hfjpbk90086xAlZ2f4zuVPE-CQlmWrBZOQ&expiry=1399492074", _invoicePath);
+            }
+            catch (Exception)
+            {
+                //throw;
+            }
+        }
+
+        return _invoicePath;
+    }
+
+    public static String GetInvoicePathNoFrames()
+    {
+        var invoicePath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/MedlemskontingenterUdenRammer.pdf");
+
+        WebClient client = new WebClient();
+
+        try
+        {
+            client.DownloadFile("https://dl.dropboxusercontent.com/s/xi26d7pcp32bvf0/MedlemskontingenterUdenRammer.pdf?dl=1&token_hash=AAEcAnVVuPRnzeX0pGMo7NW3SUlXk58HWXue4wcorFtj8Q", invoicePath);
+        }
+        catch (Exception)
+        {
+            //throw;
+        }
+
+        return invoicePath;
     }
 
     String GetGiroKortPath(String memberId)
@@ -42,16 +78,27 @@ public class PDFParser
         return outfile;
     }
 
+    public static String GetGiroKortPathForPrint(String memberId)
+    {
+        String outfile = System.Web.HttpContext.Current.Server.MapPath("~/upload/KIF/" + memberId + ".pdf");
+        return outfile;
+    }
+
 
     public Boolean InvoiceExists(String memberNumber)
     {
-        return GetInvoice(GetInvoicePath(), null, memberNumber);
+        return GetInvoice(GetInvoicePath(), null, memberNumber, true);
     }
-
+    
     public String GetInvoice(String memberNumber)
     {
-        String outfile = GetGiroKortPath(memberNumber);
-        return GetInvoice(GetInvoicePath(), outfile, memberNumber) ? outfile : null; 
+        return GetInvoice(memberNumber, GetGiroKortPath(memberNumber), GetInvoicePath());  
+    }
+
+    public String GetInvoice(String memberNumber, String path, String invoicePath)
+    {
+        String outfile = path;
+        return GetInvoice(invoicePath, outfile, memberNumber, true) ? outfile : null;
     }
 
     public Boolean HasGiroKortBeenDownloaded(String memberNumber)
@@ -67,7 +114,7 @@ public class PDFParser
     /// <param name="inFileName">the full path to the pdf file.</param>
     /// <param name="outFileName">the output file name.</param>
     /// <returns>the extracted text</returns>
-    private Boolean GetInvoice(string inFileName, String outputFile, String memberNumber)
+    private Boolean GetInvoice(string inFileName, String outputFile, String memberNumber, Boolean notUsed)
     {
         
         try
