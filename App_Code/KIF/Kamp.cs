@@ -24,6 +24,8 @@ public class Kamp
     {
         get
         {
+            if (Date.TimeOfDay == new TimeSpan(0,0,0,0,0) )
+                return "";
             return Date.ToString("HH:mm");
         }
     }
@@ -45,7 +47,7 @@ public class Kamp
         }
     }
 
-    static String[] teams = { "Oldboys", "Herre S1", "Herre S2", "Herre S3", "HS4", "Herre S5", "U17 drenge", "U-17 drenge", "U16 drenge", "U-16 drenge", "U15 drenge", "U-15 drenge", "U14 drenge", "U-14 drenge", "U13 drenge", "U-13 drenge", "U12 drenge", "U-12 drenge", "U11 drenge", "U-11 drenge", "U10 drenge", "U-10 drenge", "U9 drenge", "U-9 drenge", "U8 drenge", "U-8 drenge" };
+    static String[] teams = { "Oldboys", "Herre S1", "Herre S2", "Herre S3", "Herre S4", "Herre S5", "U17 drenge", "U-17 drenge", "U16 drenge", "U-16 drenge", "U15 drenge", "U-15 drenge", "U14 drenge", "U-14 drenge", "U13 drenge", "U-13 drenge", "U12 drenge", "U-12 drenge", "U11 drenge", "U-11 drenge", "U10 drenge", "U-10 drenge", "U9 drenge", "U-9 drenge", "U8 drenge", "U-8 drenge" };
     static String[] teamTitle = { "Oldboys", "Serie 1", "Serie 2", "Serie 3", "Serie 4", "Serie 5", "U-17", "U-17", "U-16", "U-16", "U-15", "U-15", "U-14", "U-14", "U-13", "U13", "U-12", "U-12", "U-11", "U-11", "U-10", "U-10", "U-9", "U-9", "U-8", "U-8"};
     static String[] stævneTeams = { "U8 drenge", "U9 drenge", "U10 drenge", "U11 drenge", "U-8 drenge", "U-9 drenge", "U-10 drenge", "U-11 drenge" };
 
@@ -62,7 +64,8 @@ public class Kamp
         if (DateTime.TryParse(split[2], out dt))
         {
             TimeSpan ts;
-            if (TimeSpan.TryParse(split[3], out ts))
+            TimeSpan.TryParse(split[3], out ts);
+            //if ()
             {
                 dt = dt.Add(ts);
                 if (all || dt.Date >= DateTime.Now.Date)
