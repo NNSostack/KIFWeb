@@ -22,7 +22,7 @@
         <table cellspacing="0" cellpadding="10"  >
             <asp:Repeater runat="server" ID="memberList">
                 <HeaderTemplate>
-                    
+                    <h2><%# Afdeling %></h2>
                 </HeaderTemplate>
 
                 <FooterTemplate>

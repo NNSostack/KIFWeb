@@ -13,7 +13,7 @@ public partial class Holdliste : System.Web.UI.Page
 
     static List<Medlem> list = null;
 
-    String Afdeling 
+    protected String Afdeling 
     {
         get
         {
