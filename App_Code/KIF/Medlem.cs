@@ -16,8 +16,9 @@ public class Medlem
     public String Postnummer { get; set; }
     public String By { get; set; }
     public Boolean Kontingentfritagelse { get; set; }
+    public Boolean AllowEmail { get; set; }
 
-    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer, kontingentfritagelse;
+    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer, kontingentfritagelse, smsEmail;
 
     public static void Initialize(String line)
     {
@@ -53,6 +54,8 @@ public class Medlem
                 postnummer = i;
             else if (s == "Kontingentfritagelse")
                 kontingentfritagelse = i;
+            else if (s == "SMS/Email fra klubben")
+                smsEmail = i;
 
         }
     }
@@ -84,6 +87,11 @@ public class Medlem
 
         if (split[kontingentfritagelse].ToLower() == "ja")
             m.Kontingentfritagelse = true;
+
+        m.AllowEmail = false;
+        
+        if (split[smsEmail].ToLower() == "ja")
+            m.AllowEmail = true;
 
         return m;
     }

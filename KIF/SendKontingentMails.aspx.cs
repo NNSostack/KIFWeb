@@ -51,7 +51,7 @@ Kauslunde fodbold";
             throw new ApplicationException("No email");
 
 
-        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, "Kontingentopkrævning for '" + medlem.Navn + "'", "");
+        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, txtSubject.Text.Replace("Navn", medlem.Navn), "");
         mm.Body = GetBody(medlem);
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;
@@ -67,6 +67,14 @@ Kauslunde fodbold";
 
     }
 
+
+    Boolean kontingentMails = true;
+    protected void send_Click2(object sender, EventArgs e)
+    {
+        kontingentMails = false;
+        send_Click(sender, e); 
+    }
+    
     protected void send_Click(object sender, EventArgs e)
     {
         if (txtSecurity.Text != "prodknt")
@@ -88,9 +96,22 @@ Kauslunde fodbold";
 
             }
 
-            if (parser.InvoiceExists(medlem.MemberId))
+            if (parser.InvoiceExists(medlem.MemberId) || !kontingentMails)
             {
-                Response.Write(medlem.Årgang + " - " + Request.RawUrl.Replace("SendKontingentMails", "Kontingent") + "?memberId=" + medlem.MemberId + "<br/>");
+                if (kontingentMails)
+                    Response.Write(medlem.Årgang + " - " + Request.RawUrl.Replace("SendKontingentMails", "Kontingent") + "?memberId=" + medlem.MemberId + "<br/>");
+                else
+                {
+                    Response.Write(medlem.MemberId + ": " + medlem.Navn);
+                    if (!medlem.AllowEmail)
+                    {
+                        Response.Write(" - VIL IKKE MODTAGE MAILS FRA KLUBBEN<br/>");
+                        continue;
+                    }
+                    else
+                        Response.Write("<br/>");
+                }
+                
                 try
                 {
                     SendMail(medlem);

@@ -13,7 +13,13 @@
         Send for medlemsnummer: <asp:TextBox runat="server" ID="txtMedlemsnummer" />
         Kodeord: <asp:TextBox runat="server" ID="txtSecurity" />
         <asp:Button runat="server" Text="Send kontingentmails" OnClick="send_Click" />
+        <asp:Button ID="Button1" runat="server" Text="Send mails" OnClick="send_Click2" />
         <br/>
+        <br />
+        Subject:<br />
+        <asp:TextBox runat="server" ID="txtSubject" Width="600" Text="Kontingentopkrævning for '{Navn}'" />
+        <br />
+        Body:
         <br />
         <asp:TextBox runat="server" TextMode="MultiLine" ID="txtMessage" Width="600" Height="400" />
         <br />
