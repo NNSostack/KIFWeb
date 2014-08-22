@@ -102,7 +102,7 @@ Kauslunde fodbold";
                     Response.Write(medlem.Årgang + " - " + Request.RawUrl.Replace("SendKontingentMails", "Kontingent") + "?memberId=" + medlem.MemberId + "<br/>");
                 else
                 {
-                    Response.Write(medlem.MemberId + ": " + medlem.Navn);
+                    Response.Write(medlem.MemberId + ": " + medlem.Navn + ", " + medlem.Email);
                     if (!medlem.AllowEmail)
                     {
                         Response.Write(" - VIL IKKE MODTAGE MAILS FRA KLUBBEN<br/>");
