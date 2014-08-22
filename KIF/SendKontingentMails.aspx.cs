@@ -111,6 +111,8 @@ Kauslunde fodbold";
                     else
                         Response.Write("<br/>");
                 }
+
+                Response.Flush();
                 
                 try
                 {
