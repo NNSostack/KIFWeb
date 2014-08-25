@@ -23,6 +23,8 @@
         <br />
         <asp:TextBox runat="server" TextMode="MultiLine" ID="txtMessage" Width="600" Height="400" />
         <br />
+        <asp:CheckBox runat="server" ID="chkOnlySendToMembersWhoHaveNotDownloadedGiro" Text="Send KUN til dem, der ikke har downloaded girokort" />
+        <br />
         <asp:Button runat="server" ID="showTest" Text="Vis mailindhold" OnClick="showTest_Click" /> 
         <asp:Button runat="server" ID="cmdShowNotDownloads" Text="Vis medlemmer, der ikke har downloaded girokort" OnClick="showNoDownload_Click" /> 
         <br />

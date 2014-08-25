@@ -51,7 +51,7 @@ Kauslunde fodbold";
             throw new ApplicationException("No email");
 
 
-        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, txtSubject.Text.Replace("Navn", medlem.Navn), "");
+        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, txtSubject.Text.Replace("{Navn}", medlem.Navn), "");
         mm.Body = GetBody(medlem);
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;
@@ -99,7 +99,16 @@ Kauslunde fodbold";
             if (parser.InvoiceExists(medlem.MemberId) || !kontingentMails)
             {
                 if (kontingentMails)
+                {
+                    if (chkOnlySendToMembersWhoHaveNotDownloadedGiro.Checked)
+                    {
+                        //  If giro has been downloaded then dont send
+                        if ( parser.HasGiroKortBeenDownloaded(medlem.MemberId) )
+                            continue;
+                    }
+
                     Response.Write(medlem.Årgang + " - " + Request.RawUrl.Replace("SendKontingentMails", "Kontingent") + "?memberId=" + medlem.MemberId + "<br/>");
+                }
                 else
                 {
                     Response.Write(medlem.MemberId + ": " + medlem.Navn + ", " + medlem.Email);
