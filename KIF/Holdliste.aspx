@@ -40,7 +40,8 @@
             
         </table>
         <asp:PlaceHolder runat="server" Visible="<%# !String.IsNullOrEmpty(allMail) %>">
-            <a href="" onclick="this.href='mailto:' + '<%# allMail %>'">Send mail til alle</a>
+            <a href="" onclick="this.href='mailto:' + '<%# allMailWithSemiColon %>'">Send mail til alle</a>
+            <a href="" onclick="this.href='mailto:' + '<%# allMail %>'">Send mail til alle fra IPad</a>
         </asp:PlaceHolder> 
 
     </form>

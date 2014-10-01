@@ -50,6 +50,7 @@ public partial class Holdliste : System.Web.UI.Page
     }
 
     protected String allMail = "";
+    protected String allMailWithSemiColon = "";
     protected String GetEmail(String email)
     {
         String format = "<a href=\"\" title=\"{0}@{1}\" onclick=\"this.href='mailto:' + '{0}' + '@' + '{1}'\">Send email</a>";
@@ -59,8 +60,11 @@ public partial class Holdliste : System.Web.UI.Page
         
         String[] split = email.Split('@');
 
-        if( !String.IsNullOrEmpty(email) )
+        if (!String.IsNullOrEmpty(email))
+        {
             allMail = allMail + email + ",";
+            allMailWithSemiColon = allMailWithSemiColon + email + ";";
+        }
 
         if (split.Length == 2)
             return String.Format(format, split[0], split[1]);
