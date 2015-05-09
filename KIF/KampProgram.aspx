@@ -28,6 +28,9 @@
     </style> 
 
     <style media="print" type="text/css">
+        .hideOnPrint {
+            display:none;
+        }
         .red
         {
             background-color: Red;
@@ -51,6 +54,10 @@
 <body>
     <form id="form1" runat="server">
     <div>
+        <div class="hideOnPrint">
+            <a href="http://noerup-sostack.dk/kif/DisplayPages.aspx">Ugens kampe</a>
+            <a href="http://noerup-sostack.dk/kif/DisplayPages.aspx?neextWeek=1">Næste uges kampe</a>
+        </div>
         <table border="1px solid black;" cellspacing="0" cellpadding="5">
             <tr style="font-weight:bold;">
                 <td>#</td>

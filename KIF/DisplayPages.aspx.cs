@@ -22,8 +22,14 @@ public partial class KIF_DisplayPages : System.Web.UI.Page
         var kampe = Kamp.GetKampe(true);
 
         var date = DateTime.Now;
+
+        Boolean showNextWeek = false;
+
+        showNextWeek = Request["nextWeek"] != null;
+
         while( date.DayOfWeek != DayOfWeek.Monday )
-            date = date.AddDays(1);
+            date = date.AddDays(showNextWeek ? 1 : -1);
+
 
         var list = new List<fight>();
         foreach (var kamp in kampe.Where(x => x.Date >= date && x.Date < date.AddDays(7)))
@@ -40,6 +46,8 @@ public partial class KIF_DisplayPages : System.Web.UI.Page
         nextWeek.DataSource = list;
         udehold.DataSource = list;
         hjemmehold.DataSource = list;
+
+
 
         var lastWeeksFights = new List<fight>();
 

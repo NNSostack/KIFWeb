@@ -17,7 +17,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="window.print()">
     <form id="form1" runat="server">
         <div style="text-align: center;">
             <asp:Repeater runat="server" ID="nextWeek">
@@ -75,7 +75,6 @@
                 </ItemTemplate>
             </asp:Repeater>
         </div>
-
 
     </form>
 </body>
