@@ -32,13 +32,16 @@ public class PDFParser
 
     #endregion
 
-    String _invoicePath = null;
-    String GetInvoicePath()
+    static String _invoicePath = null;
+    static String GetInvoicePath()
     {
+        _invoicePath = System.Web.HttpContext.Current.Session["~/App_Data/Medlemskontingenter.pdf"] as String;    
+        
         if (_invoicePath == null)
         {
             _invoicePath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Medlemskontingenter.pdf");
-         
+            System.Web.HttpContext.Current.Session["~/App_Data/Medlemskontingenter.pdf"] = _invoicePath;
+
             WebClient client = new WebClient();
 
             try
@@ -72,7 +75,7 @@ public class PDFParser
         return invoicePath;
     }
 
-    String GetGiroKortPath(String memberId)
+    static String GetGiroKortPath(String memberId)
     {
         String outfile = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/KIF/GiroKort/" + memberId + ".pdf");
         return outfile;
@@ -85,17 +88,17 @@ public class PDFParser
     }
 
 
-    public Boolean InvoiceExists(String memberNumber)
+    public static Boolean InvoiceExists(String memberNumber)
     {
         return GetInvoice(GetInvoicePath(), null, memberNumber, true);
     }
     
-    public String GetInvoice(String memberNumber)
+    public static String GetInvoice(String memberNumber)
     {
         return GetInvoice(memberNumber, GetGiroKortPath(memberNumber), GetInvoicePath());  
     }
 
-    public String GetInvoice(String memberNumber, String path, String invoicePath)
+    public static String GetInvoice(String memberNumber, String path, String invoicePath)
     {
         String outfile = path;
         return GetInvoice(invoicePath, outfile, memberNumber, true) ? outfile : null;
@@ -114,7 +117,7 @@ public class PDFParser
     /// <param name="inFileName">the full path to the pdf file.</param>
     /// <param name="outFileName">the output file name.</param>
     /// <returns>the extracted text</returns>
-    private Boolean GetInvoice(string inFileName, String outputFile, String memberNumber, Boolean notUsed)
+    private static Boolean GetInvoice(string inFileName, String outputFile, String memberNumber, Boolean notUsed)
     {
         
         try
@@ -250,7 +253,7 @@ public class PDFParser
     /// </summary>
     /// <param name="input">uncompressed</param>
     /// <returns></returns>
-    private string ExtractTextFromPDFBytes(byte[] input)
+    static private string ExtractTextFromPDFBytes(byte[] input)
     {
         if (input == null || input.Length == 0) return "";
 
@@ -381,7 +384,7 @@ public class PDFParser
     /// <param name="search">the searched token</param>
     /// <param name="recent">the recent character array</param>
     /// <returns></returns>
-    private bool CheckToken(string[] tokens, char[] recent)
+    static private bool CheckToken(string[] tokens, char[] recent)
     {
         foreach (string token in tokens)
         {

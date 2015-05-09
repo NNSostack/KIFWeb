@@ -77,7 +77,7 @@ public partial class KIF_InfoNotOk : System.Web.UI.Page
             }
             else
             {
-                if( System.IO.Directory.GetFiles(Server.MapPath("~/App_Data/KIF/InfoChecks/"), memberId + "-*.txt").Count() == 0 )
+                if( System.IO.Directory.GetFiles(Server.MapPath("~/App_Data/KIF/InfoChecks/"), memberId + "-*.txt").Count() > 0 )
                     Response.Write(@"<div style=""color:RGB(255, 0, 0)""><h2>Oplysningerne er allerede bekræftet eller ændret. Hvis det var en fejl må du sende en mail til <a href=""mailto:kiffodbold@email.dk"">kiffodbold@email.dk</a></h2></div>"); 
                 else
                     Response.Write(@"<div style=""color:RGB(255, 0, 0)""><h2>De angivne oplysninger kan ikke benyttes til at bekræfte dine oplysninger</h2></div>"); 

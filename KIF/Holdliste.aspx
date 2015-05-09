@@ -31,6 +31,10 @@
                 <ItemTemplate>
                     <tr style="background-color:<%# Container.ItemIndex % 2 == 0 ? "#d8d8d8" : "" %>">
                         <td><%# Container.ItemIndex + 1 %>. <%# Eval("Navn") %></td>
+                        <td>
+                            <asp:PlaceHolder runat="server" Visible='<%# PDFParser.InvoiceExists(Eval("MemberId") as String) %>'>
+                                <a href="http://www.noerup-sostack.dk/KIF/kontingent.aspx?memberid=<%# Eval("MemberId") %>" target="_blank">Giro</a></td>
+                            </asp:PlaceHolder>
                         <td><%# Eval("Adresse") %></td>
                           <td><a href="sms:<%# Eval("Telefon") %>"><%# Eval("Telefon") %></a></td>
                             <td style="width:10px;"><%# GetEmail(Eval("Email") as String) %></td>

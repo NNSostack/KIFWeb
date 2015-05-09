@@ -20,6 +20,9 @@ public class Kamp
     public String Link { get; set; }
     public Boolean Oversidder { get; set; }
 
+    public String HjemmeholdScore { get; set; }
+    public String UdeholdScore { get; set; }
+
     public String Kl
     {
         get
@@ -80,6 +83,10 @@ public class Kamp
                             k = new Kamp();
                             k.Title = teamTitle[count];// team;// +", " + dt.ToString("dddd \\d. dd\\/MM-yyyy kl. HH:mm");
                             String modstander = split[6];
+                            int start = modstander.IndexOf("(");
+                            if (start > -1)
+                                modstander = modstander.Substring(0, start);
+
                             if (!all)
                             {
                                 foreach (String stævne in stævneTeams)
@@ -98,6 +105,8 @@ public class Kamp
                             k.Dommer = split[7];
                             k.Kiosk = split[8];
                             k.Dag = split[1];
+                            k.HjemmeholdScore = split[10];
+                            k.UdeholdScore = split[11];
                             if ( k.Modstander.ToLower() == "oversidder")
                                 k.Oversidder = true;
                         }
@@ -107,7 +116,7 @@ public class Kamp
 
             }
         }
-
+        
         return k;
     }
 

@@ -50,9 +50,12 @@ Kauslunde fodbold";
         if (mail == "")
             throw new ApplicationException("No email");
 
+        medlem.Navn = medlem.Navn.Replace("ø", "oe");
+        medlem.Navn = medlem.Navn.Replace("Ø", "Oe");
 
         MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, txtSubject.Text.Replace("{Navn}", medlem.Navn), "");
         mm.Body = GetBody(medlem);
+        mm.SubjectEncoding = Encoding.UTF8; 
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;
         mm.Bcc.Add(new MailAddress("kiffodbold@email.dk"));  
@@ -96,7 +99,7 @@ Kauslunde fodbold";
 
             }
 
-            if (parser.InvoiceExists(medlem.MemberId) || !kontingentMails)
+            if (PDFParser.InvoiceExists(medlem.MemberId) || !kontingentMails)
             {
                 if (kontingentMails)
                 {
@@ -153,8 +156,8 @@ Kauslunde fodbold";
 
         var fritaget = list.Where(x => x.Kontingentfritagelse).ToList();
         rptFritaget.DataSource = fritaget;
-        rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse && parser.InvoiceExists(x.MemberId)).ToList();
-        rptNoInvoice.DataSource = list.Where(x => !x.Kontingentfritagelse && !parser.InvoiceExists(x.MemberId)).ToList(); 
+        rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse && PDFParser.InvoiceExists(x.MemberId)).ToList();
+        rptNoInvoice.DataSource = list.Where(x => !x.Kontingentfritagelse && !PDFParser.InvoiceExists(x.MemberId)).ToList(); 
         DataBind();
     }
     protected void cmdGetGiroKort_Click(object sender, EventArgs e)
@@ -166,7 +169,7 @@ Kauslunde fodbold";
         {
             String medlemsNummer = medlem.MemberId;
             var source = PDFParser.GetGiroKortPathForPrint(medlemsNummer);
-            String outfile = parser.GetInvoice(medlemsNummer, source, PDFParser.GetInvoicePathNoFrames());
+            String outfile = PDFParser.GetInvoice(medlemsNummer, source, PDFParser.GetInvoicePathNoFrames());
             if (outfile != null)
             {
                 System.IO.File.Move(outfile, outfile.Replace(medlemsNummer, medlem.Årgang + "-" + medlemsNummer));

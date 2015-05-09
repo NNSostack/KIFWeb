@@ -13,11 +13,9 @@ public partial class KIF_Kontingent : System.Web.UI.Page
     {
         var medlemsNummer = Request.QueryString["memberId"];
 
-        if (!String.IsNullOrEmpty(medlemsNummer) && medlemsNummer.Length == 10)
+        if (!String.IsNullOrEmpty(medlemsNummer) && medlemsNummer.Length == 5)
         {
-            PDFParser parser = new PDFParser();
- 
-            String outfile = parser.GetInvoice(medlemsNummer);
+            String outfile = PDFParser.GetInvoice(medlemsNummer);
             if ( !String.IsNullOrEmpty(outfile) )
             {
                 invoicePath = outfile;
