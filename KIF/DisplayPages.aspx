@@ -69,8 +69,9 @@
                 </HeaderTemplate>
                 <ItemTemplate>
                     <h3><%# Eval("HjemmeHold") %> - <%# Eval("UdeHold") %></h3>
-                    <h4><%# Eval("Tidspunkt") %></h4>
-                    <h5><%# Eval("UdeHoldScore") %> - <%# Eval("HjemmeHoldScore") %></h5>
+                    <h4><%# Eval("Tidspunkt") %>
+                        <p style="font-size: 200%"><%# Eval("UdeHoldScore") %> - <%# Eval("HjemmeHoldScore") %></p>
+                    </h4>
                     <br />
                 </ItemTemplate>
             </asp:Repeater>
