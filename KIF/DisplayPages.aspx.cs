@@ -51,7 +51,7 @@ public partial class KIF_DisplayPages : System.Web.UI.Page
 
         var lastWeeksFights = new List<fight>();
 
-        foreach (var kamp in kampe.Where(x => x.Date < date && x.Date >= date.AddDays(-7) && x.Title != "Oldboys"))
+        foreach (var kamp in kampe.Where(x => x.Date < date && x.Date >= date.AddDays(-7)))
         {
             lastWeeksFights.Add(new fight
             {
