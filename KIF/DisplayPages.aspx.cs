@@ -19,7 +19,7 @@ public partial class KIF_DisplayPages : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        var kampe = Kamp.GetKampe(true);
+        var kampe = Kamp.GetKampe(true).Where(x => !x.Oversidder);
 
         var date = DateTime.Now;
 
