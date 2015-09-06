@@ -119,7 +119,7 @@ public class PDFParser
     /// <returns>the extracted text</returns>
     private static Boolean GetInvoice(string inFileName, String outputFile, String memberNumber, Boolean notUsed)
     {
-        
+        Boolean memberFound = false;
         try
         {
             // Create a reader for the given PDF file
@@ -135,7 +135,8 @@ public class PDFParser
             float curUnit = 0;
 
             //ExtractPages(inFileName, @"C:\Users\Nikolaj Sostack\Downloads\PDF\pdf.pdf", 1, 1);
-
+         
+            int pageFound = -1;
             for (int page = 1; page <= reader.NumberOfPages; page++)
             {
 
@@ -145,9 +146,10 @@ public class PDFParser
                 string txt = ExtractTextFromPDFBytes(reader.GetPageContent(page));
                 if( txt.Contains("\n\r" + memberNumber + "\n\r") )
                 {
-                    if( !String.IsNullOrEmpty(outputFile) )
-                        ExtractPages(inFileName, outputFile, page, page);
-                    return true;
+                    if (!String.IsNullOrEmpty(outputFile))
+                        pageFound = page;
+
+                    memberFound = true;
                 }
 
                 //// Write the progress.
@@ -175,6 +177,9 @@ public class PDFParser
                 //}
             }
 
+            if( memberFound && pageFound > -1 )
+                ExtractPages(inFileName, outputFile, pageFound, pageFound);
+
             //if (totalWritten < totalLen)
             //{
             //    for (int i = 0; i < (totalLen - totalWritten); i++)
@@ -189,10 +194,12 @@ public class PDFParser
         }
         finally
         {
+            
+
             //if (outFile != null) outFile.Close();
         }
 
-        return false;
+        return memberFound;
     }
     #endregion
 
