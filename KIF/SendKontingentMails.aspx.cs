@@ -53,6 +53,13 @@ Kauslunde fodbold";
         medlem.Navn = medlem.Navn.Replace("ø", "oe");
         medlem.Navn = medlem.Navn.Replace("Ø", "Oe");
 
+        medlem.Navn = medlem.Navn.Replace("æ", "ae");
+        medlem.Navn = medlem.Navn.Replace("Æ", "Ae");
+
+        medlem.Navn = medlem.Navn.Replace("å", "aa");
+        medlem.Navn = medlem.Navn.Replace("Å", "Aa");
+
+
         MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, txtSubject.Text.Replace("{Navn}", medlem.Navn), "");
         mm.Body = GetBody(medlem);
         mm.SubjectEncoding = Encoding.UTF8; 
