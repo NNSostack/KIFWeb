@@ -50,8 +50,8 @@ public class Kamp
         }
     }
 
-    static String[] teams = { "Oldboys", "Old Boys", "Herre S1", "Herre S2", "Herre S3", "Herre S4", "HS4", "Herre S5", "HS5",  "U17 drenge", "U-17 drenge", "U16 drenge", "U-16 drenge", "U15 drenge", "U-15 drenge", "U14 drenge", "U-14 drenge", "U13 drenge", "U-13 drenge", "U12 drenge", "U-12 drenge", "U11 drenge", "U-11 drenge", "U10 drenge", "U-10 drenge", "U9 drenge", "U-9 drenge", "U8 drenge", "U-8 drenge" };
-    static String[] teamTitle = { "Oldboys", "Oldboys", "Serie 1", "Serie 2", "Serie 3", "Serie 4", "Serie 4", "Serie 5", "Serie 5", "U-17", "U-17", "U-16", "U-16", "U-15", "U-15", "U-14", "U-14", "U-13", "U13", "U-12", "U-12", "U-11", "U-11", "U-10", "U-10", "U-9", "U-9", "U-8", "U-8" };
+    static String[] teams = { "Oldboys", "Old Boys", "Herre S1", "Herre S2", "Herre S3", "HS3", "Herre S4", "HS4", "Herre S5", "HS5",  "U17 drenge", "U-17 drenge", "U16 drenge", "U-16 drenge", "U15 drenge", "U-15 drenge", "U14 drenge", "U-14 drenge", "U13 drenge", "U-13 drenge", "U12 drenge", "U-12 drenge", "U11 drenge", "U-11 drenge", "U10 drenge", "U-10 drenge", "U9 drenge", "U-9 drenge", "U8 drenge", "U-8 drenge" };
+    static String[] teamTitle = { "Oldboys", "Oldboys", "Serie 1", "Serie 2", "Serie 3", "Serie 3", "Serie 4", "Serie 4", "Serie 5", "Serie 5", "U-17", "U-17", "U-16", "U-16", "U-15", "U-15", "U-14", "U-14", "U-13", "U13", "U-12", "U-12", "U-11", "U-11", "U-10", "U-10", "U-9", "U-9", "U-8", "U-8" };
     static String[] stævneTeams = { "U8 drenge", "U9 drenge", "U10 drenge", "U11 drenge", "U-8 drenge", "U-9 drenge", "U-10 drenge", "U-11 drenge" };
 
     public static Kamp GetKamp(String line, Boolean all)
@@ -76,12 +76,28 @@ public class Kamp
 
                     String title = split[4];
                     int count = 0;
+
+                    //var team = teams.Where(x => title.ToLower().StartsWith(x.ToLower())).FirstOrDefault();
+                    //if (team == null)
+                    //    team = title;
+
+                    String myTeamTitle = title;
                     foreach (String team in teams)
                     {
                         if (title.ToLower().StartsWith(team.ToLower()))
                         {
+                            myTeamTitle = teamTitle[count];
+                            break;
+                        }
+                        count++;
+                    }
+
+                    //foreach (String team in teams)
+                    {
+                        //if (title.ToLower().StartsWith(team.ToLower()))
+                        {
                             k = new Kamp();
-                            k.Title = teamTitle[count];// team;// +", " + dt.ToString("dddd \\d. dd\\/MM-yyyy kl. HH:mm");
+                            k.Title = myTeamTitle;// team;// +", " + dt.ToString("dddd \\d. dd\\/MM-yyyy kl. HH:mm");
                             String modstander = split[6];
                             int start = modstander.IndexOf("(");
                             if (start > -1)
@@ -91,7 +107,7 @@ public class Kamp
                             {
                                 foreach (String stævne in stævneTeams)
                                 {
-                                    if (team.ToLower() == stævne.ToLower())
+                                    if (myTeamTitle.ToLower() == stævne.ToLower())
                                     {
                                         modstander = "stævne";
                                     }

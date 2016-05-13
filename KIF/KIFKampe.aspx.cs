@@ -31,9 +31,9 @@ public partial class _Default : System.Web.UI.Page
         TimeSpan ts = new TimeSpan(1, 0, 0);
 
         List<Kamp> kampe = Kamp.GetKampe(false).Take(5).ToList();
-        kampe.Add(new Kamp { Title = "Hent kampprogram", Link = "http://noerup-sostack.dk/kif/Kampprogram.aspx" });
-        kampe.Add(new Kamp { Title = "Hent montresedler", Link = "http://noerup-sostack.dk/kif/DisplayPages.aspx" }); 
-        kampe.Add(new Kamp { Title = "Se kioskbemanding", Link = "http://noerup-sostack.dk/kif/Kampprogram.aspx?kiosk=1" }); 
+        kampe.Add(new Kamp { Title = "Hent kampprogram", Link = "http://kif.nørup-sostack.dk/kif/Kampprogram.aspx" });
+        kampe.Add(new Kamp { Title = "Hent montresedler", Link = "http://kif.nørup-sostack.dk/kif/DisplayPages.aspx" }); 
+        kampe.Add(new Kamp { Title = "Se kioskbemanding", Link = "http://kif.nørup-sostack.dk/kif/Kampprogram.aspx?kiosk=1" }); 
 
         Response.ContentType = "application/rss+xml";
         
