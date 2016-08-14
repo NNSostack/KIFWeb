@@ -7,47 +7,71 @@
     <title></title>
 
     <style>
-        body
-        {
+        body {
             font-family: Verdana;
             font-size: 8pt;
         }
+        .departments {
+            font-size: 130%;
+        }
     </style>
+
+    <style media="print" >
+        .departments {
+            display: none;
+        }
+        body {
+            padding-top: 0px !important;
+        }
+    </style>
+
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
-        <asp:DropDownList runat="server" ID="dd" AutoPostBack="true" />
-        
-        <table cellspacing="0" cellpadding="10"  >
-            <asp:Repeater runat="server" ID="memberList">
-                <HeaderTemplate>
-                    <h2><%# Afdeling %></h2>
-                </HeaderTemplate>
+        <div>
+            <asp:DropDownList runat="server" ID="dd" AutoPostBack="true" Visible="false"/>
+            <div class="departments">
+                <h2>Vælg afdeling</h2>
+                
+                <a href="?afdeling=">Alle</a>
+                <asp:Repeater runat="server" ID="rptDepartments">
+                    <ItemTemplate>
+                        <a href="?afdeling=<%# Eval("Afdeling") %>"><%# Eval("Afdeling") %></a> |
+                        
+                    </ItemTemplate>
 
-                <FooterTemplate>
-                    </tr>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <tr style="background-color:<%# Container.ItemIndex % 2 == 0 ? "#d8d8d8" : "" %>">
-                        <td><%# Container.ItemIndex + 1 %>. <%# Eval("Navn") %></td>
-                        <td>
-                            <asp:PlaceHolder runat="server" Visible='<%# PDFParser.InvoiceExists(Eval("MemberId") as String) %>'>
-                                <a href="http://www.noerup-sostack.dk/KIF/kontingent.aspx?memberid=<%# Eval("MemberId") %>" target="_blank">Giro</a></td>
+                </asp:Repeater>
+            </div>
+
+            <table cellspacing="0" cellpadding="10">
+                <asp:Repeater runat="server" ID="memberList">
+                    <HeaderTemplate>
+                        <h2><%# Afdeling %></h2>
+                    </HeaderTemplate>
+
+                    <FooterTemplate>
+                        </tr>
+                    </FooterTemplate>
+                    <ItemTemplate>
+                        <tr style="background-color: <%# Container.ItemIndex % 2 == 0 ? "#d8d8d8" : "" %>">
+                            <td><%# Container.ItemIndex + 1 %>. <%# Eval("Navn") %></td>
+                            <td>
+                                <asp:PlaceHolder runat="server" Visible='<%# PDFParser.InvoiceExists(Eval("MemberId") as String) %>'>
+                                    <a href="http://www.noerup-sostack.dk/KIF/kontingent.aspx?memberid=<%# Eval("MemberId") %>" target="_blank">Giro</a>
+                            </td>
                             </asp:PlaceHolder>
                         <td><%# Eval("Adresse") %></td>
-                          <td><a href="sms:<%# Eval("Telefon") %>"><%# Eval("Telefon") %></a></td>
-                            <td style="width:10px;"><%# GetEmail(Eval("Email") as String) %></td>
-                    </tr>
-                </ItemTemplate>
-            </asp:Repeater> 
-            
-        </table>
-        <asp:PlaceHolder runat="server" Visible="<%# !String.IsNullOrEmpty(allMail) %>">
-            <a href="" onclick="this.href='mailto:' + '<%# allMailWithSemiColon %>'">Send mail til alle</a>
-            <a href="" onclick="this.href='mailto:' + '<%# allMail %>'">Send mail til alle fra IPad</a>
-        </asp:PlaceHolder> 
+                            <td><a href="sms:<%# Eval("Telefon") %>"><%# Eval("Telefon") %></a></td>
+                            <td style="width: 10px;"><%# GetEmail(Eval("Email") as String, true) %></td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
 
+            </table>
+            <asp:PlaceHolder runat="server" Visible="<%# !String.IsNullOrEmpty(allMail) %>">
+                <a href="" onclick="this.href='mailto:' + '<%# allMailWithSemiColon %>'">Send mail til alle</a>
+                <a href="" onclick="this.href='mailto:' + '<%# allMail %>'">Send mail til alle fra IPad</a>
+            </asp:PlaceHolder>
     </form>
 </body>
 </html>

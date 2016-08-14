@@ -60,7 +60,11 @@ Kauslunde fodbold";
         medlem.Navn = medlem.Navn.Replace("Å", "Aa");
 
 
-        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, txtSubject.Text.Replace("{Navn}", medlem.Navn), "");
+        MailMessage mm = new MailMessage(
+            new MailAddress("noreply@nørup-sostack.dk", "Kauslunde fodbold"), new MailAddress(mail));
+        
+        mm.Subject = txtSubject.Text.Replace("{Navn}", medlem.Navn);
+        mm.ReplyTo = new MailAddress("kiffodbold@email.dk");
         mm.Body = GetBody(medlem);
         mm.SubjectEncoding = Encoding.UTF8; 
         mm.BodyEncoding = Encoding.UTF8; 
@@ -179,7 +183,13 @@ Kauslunde fodbold";
             String outfile = PDFParser.GetInvoice(medlemsNummer, source, PDFParser.GetInvoicePathNoFrames());
             if (outfile != null)
             {
-                System.IO.File.Move(outfile, outfile.Replace(medlemsNummer, medlem.Årgang + "-" + medlemsNummer));
+                var filename = outfile.Replace(medlemsNummer, medlem.Årgang + "-" + medlemsNummer);
+                Response.Write("Found giro: " + filename + "<br/>");
+                Response.Flush();
+
+                if (System.IO.File.Exists(filename) )
+                    System.IO.File.Delete(filename);
+                System.IO.File.Move(outfile, filename);
 
                 if (!String.IsNullOrEmpty(outfile))
                 {
@@ -191,9 +201,9 @@ Kauslunde fodbold";
         }
     }
 
-    public void TheDownload(String source,  string target)
+    public void TheDownload(String source,  string fileName)
     {
         //WebClient client = new WebClient();
-        //client.DownloadFile(source, target); 
+        //client.DownloadFile(source, Server.MapPath("/KIF/App_Data/KIF/NotDownloaded/"); 
     } 
 }

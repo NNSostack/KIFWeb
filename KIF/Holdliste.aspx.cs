@@ -32,12 +32,15 @@ public partial class Holdliste : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        list = Medlem.GetMedlemmer(); 
-        
+        list = Medlem.GetMedlemmer();
+
+        rptDepartments.DataSource = list.GroupBy(x => x.Årgang).OrderBy(x => x.Key).Select(x => new { Afdeling = x.Key }).ToList();
+
         if( !IsPostBack )
             dd.Items.AddRange(list.GroupBy(x => x.Årgang).OrderBy(x => x.Key).Select(x => new ListItem { Text = x.Key }).ToArray());
 
-        memberList.DataSource = list.Where(x => x.Årgang.StartsWith(Afdeling));
+        if( Request.QueryString["afdeling"] != null )
+            memberList.DataSource = list.Where(x => x.Årgang.StartsWith(Afdeling));
         DataBind();
     }
 
@@ -45,17 +48,17 @@ public partial class Holdliste : System.Web.UI.Page
     {
         get
         {
-            return Request.UrlReferrer != null && Request.UrlReferrer.AbsolutePath.ToLower().EndsWith("/print_page.aspx");
+            return Request.UrlReferrer != null && Request.UrlReferrer.AbsolutePath.ToLower().EndsWith("/print_page.aspx") || Request.QueryString["p"] != null;
         }
     }
 
     protected String allMail = "";
     protected String allMailWithSemiColon = "";
-    protected String GetEmail(String email)
+    protected String GetEmail(String email, Boolean showEmail)
     {
         String format = "<a href=\"\" title=\"{0}@{1}\" onclick=\"this.href='mailto:' + '{0}' + '@' + '{1}'\">Send email</a>";
         
-        if ( IsPrinting )
+        if ( showEmail  )
             format = "<a href=\"\" title=\"{0}@{1}\" onclick=\"this.href='mailto:' + '{0}' + '@' + '{1}'\">{0}@{1}</script></a>";
         
         String[] split = email.Split('@');

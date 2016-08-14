@@ -25,16 +25,20 @@ public partial class KIF_SendCheckInfoMails : System.Web.UI.Page
 
         String mail = txtTestMail.Text;
 
-        //if (String.IsNullOrEmpty(mail))
-        //    mail = medlem.Email;
+        if (String.IsNullOrEmpty(mail))
+            mail = medlem.Email;
 
         if (mail == "")
             throw new ApplicationException("No email");
 
 
-        MailMessage mm = new MailMessage("kiffodbold@email.dk", mail, "Opdatering af informatioiner for '" + medlem.Navn + "'", "");
+        MailMessage mm = new MailMessage(
+            new MailAddress("noreply@nørup-sostack.dk", "Kauslunde fodbold"), new MailAddress(mail));
 
-        Guid g = Guid.NewGuid(); 
+        mm.Subject = "Opdatering af informationer for '" + medlem.Navn + "'";
+
+        Guid g = Guid.NewGuid();
+        mm.ReplyTo = new MailAddress("kiffodbold@email.dk");
         mm.Body = GetBody(medlem, g);
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;

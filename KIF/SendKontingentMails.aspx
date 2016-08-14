@@ -12,7 +12,7 @@
         Testemail: <asp:TextBox runat="server" ID="txtTestMail" />
         Send for medlemsnummer: <asp:TextBox runat="server" ID="txtMedlemsnummer" />
         Kodeord: <asp:TextBox runat="server" ID="txtSecurity" />
-        <asp:Button runat="server" Text="Send kontingentmails" OnClick="send_Click" />
+        <asp:Button runat="server" Text="Send kontingentmails (kun for dem med girokort)" OnClick="send_Click" />
         <asp:Button ID="Button1" runat="server" Text="Send mails" OnClick="send_Click2" />
         <br/>
         <br />

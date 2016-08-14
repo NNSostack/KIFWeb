@@ -62,20 +62,7 @@ public class PDFParser
 
     public static String GetInvoicePathNoFrames()
     {
-        var invoicePath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/MedlemskontingenterUdenRammer.pdf");
-
-        WebClient client = new WebClient();
-
-        try
-        {
-            client.DownloadFile("https://dl.dropboxusercontent.com/s/xi26d7pcp32bvf0/MedlemskontingenterUdenRammer.pdf?dl=1&token_hash=AAEcAnVVuPRnzeX0pGMo7NW3SUlXk58HWXue4wcorFtj8Q", invoicePath);
-        }
-        catch (Exception)
-        {
-            //throw;
-        }
-
-        return invoicePath;
+        return GetInvoicePath();
     }
 
     static String GetGiroKortPath(String memberId)
