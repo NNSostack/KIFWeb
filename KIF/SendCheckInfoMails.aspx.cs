@@ -50,6 +50,37 @@ public partial class KIF_SendCheckInfoMails : System.Web.UI.Page
         client.Send(mm);
     }
 
+    List<Medlem> GetMembersNotChecked()
+    {
+        List<Medlem> list = new List<Medlem>();
+        var path = Server.MapPath("~/App_Data/KIF/InfoChecks/");
+        var members = Medlem.GetMedlemmer();
+        foreach (var file in new System.IO.DirectoryInfo(path).GetFiles("*.txt"))
+        {
+            var start = file.Name.IndexOf("-");
+            if (start > -1)
+            {
+                var memberId = file.Name.Substring(0, start);
+                var member = members.Where(x => x.MemberId == memberId).FirstOrDefault();
+                if (member != null)
+                {
+                    if( list.All(x => x.MemberId != member.MemberId) )
+                        list.Add(member);
+                }
+            }
+        }
+        return list;
+    }
+
+    protected void showUnChecked_Click(object sender, EventArgs e)
+    {
+        var list = GetMembersNotChecked().OrderBy(x => x.Årgang);
+        foreach (var member in list)
+        {
+            Response.Write(String.Format("{0}, {1}, {2}</br>", member.Navn, member.MemberId, member.Årgang)); 
+        }
+    }
+
     String GetBody(Medlem medlem, Guid g)
     {
         Boolean dataOk =
@@ -119,7 +150,14 @@ Kauslunde fodbold";
         txtSecurity.Text = "";
         String aargang = "";
 
-        var list = Medlem.GetMedlemmer().OrderBy(x => x.Årgang).ToList();
+        var list = Medlem.GetMedlemmer();
+
+        if (chkOnlyNotChecked.Checked)
+            list = GetMembersNotChecked().ToList();
+
+        list = list.OrderBy(x => x.Årgang).ToList();
+                       
+        
         if (txtTestMail.Text != "")
             list = list.Skip(3).ToList();
 
