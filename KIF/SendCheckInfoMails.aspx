@@ -16,6 +16,9 @@
         <br />
         <asp:Button runat="server" Text="Vis ikke checked info" OnClick="showUnChecked_Click" />
         <br/>
+        <asp:Button ID="Button1" runat="server" Text="Ryd op inden ny kørsel" OnClick="cleanUp_Click" OnClientClick="return confirm('Sikker?');" />
+        <br />
+
         <br />
         <asp:TextBox runat="server" TextMode="MultiLine" ID="txtMessage" Width="600" Height="400" />
         <br />

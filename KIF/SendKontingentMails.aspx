@@ -17,7 +17,7 @@
         <br/>
         <br />
         Subject:<br />
-        <asp:TextBox runat="server" ID="txtSubject" Width="600" Text="Kontingentopkrævning for '{Navn}'" />
+        <asp:TextBox runat="server" ID="txtSubject" Width="600"  />
         <br />
         Body:
         <br />
@@ -48,6 +48,7 @@
                         <td><%# Eval("Navn") %></td>
                         <td><%# Eval("Email") %></td>
                         <td><%# Eval("Telefon") %></td>
+                        <td><%# Eval("Rabat") %></td>
                     </tr>
                 </ItemTemplate> 
             </asp:Repeater>
@@ -66,9 +67,30 @@
                         <td><%# Eval("Navn") %></td>
                         <td><%# Eval("Email") %></td>
                         <td><%# Eval("Telefon") %></td>
+                        <td><%# Eval("Rabat") %></td>
                     </tr>
                 </ItemTemplate> 
             </asp:Repeater>
+
+            <asp:Repeater runat="server" ID="rptDiscount">
+                <ItemTemplate>
+                    <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="<%# Container.ItemIndex == 0 %>">
+                        <td colspan="6">
+                            <h2>Medlemmer med rabat</h2>
+                        </td> 
+                    </asp:PlaceHolder>
+                    <tr>
+                        <td><%# Container.ItemIndex + 1 %></td>
+                        <td><%# Eval("Årgang") %></td>
+                        <td><%# Eval("MemberId") %></td>
+                        <td><%# Eval("Navn") %></td>
+                        <td><%# Eval("Email") %></td>
+                        <td><%# Eval("Telefon") %></td>
+                        <td><%# Eval("Rabat") %></td>
+                    </tr>
+                </ItemTemplate> 
+            </asp:Repeater>
+
 
 
             <asp:Repeater runat="server" ID="rptNoDownload">
@@ -86,6 +108,7 @@
                         <td><%# Eval("Navn") %></td>
                         <td><%# Eval("Email") %></td>
                         <td><a href="sms:<%# Eval("Telefon") %>"><%# Eval("Telefon") %></a></td>
+                        <td><%# Eval("Rabat") %></td>
                     </tr>
                     <%# SetEmail((String)Eval("Email")) %>
                 </ItemTemplate> 
@@ -97,6 +120,27 @@
                     </tr>
                 </FooterTemplate>
             </asp:Repeater>
+
+            <asp:Repeater runat="server" ID="rptHasDownloaded">
+                <ItemTemplate>
+                    <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="<%# Container.ItemIndex == 0 %>">
+                        <td colspan="6">
+                            <h2>Medlemmer der har hentet girokort</h2>
+                        </td> 
+                    </asp:PlaceHolder>
+                    <tr>
+                        <td><%# Container.ItemIndex + 1 %></td>
+                        <td><%# Eval("Årgang") %></td>
+                        <td><%# Eval("MemberId") %></td>
+                        <td><%# Eval("Navn") %></td>
+                        <td><%# Eval("Email") %></td>
+                        <td><%# Eval("Telefon") %></td>
+                        <td><%# Eval("Rabat") %></td>
+                    </tr>
+                </ItemTemplate> 
+            </asp:Repeater>
+
+
                 <tr>
                     <td colspan="6">
                         <asp:Button ID="cmdGetGiroKort" runat="server" Text="Hent girokort" OnClick="cmdGetGiroKort_Click" />

@@ -134,12 +134,19 @@ public class PDFParser
                 //System.IO.File.WriteAllBytes(@"C:\Users\Nikolaj Sostack\Downloads\PDF\pdf.pdf", reader.GetPageContent(page));
 
                 string txt = ExtractTextFromPDFBytes(reader.GetPageContent(page));
+
+                var lastLine = txt.Split('\r')[1];
+                var number = lastLine;
+                           
                 if( txt.Contains("\n\r" + memberNumber + "\n\r") )
                 {
-                    if (!String.IsNullOrEmpty(outputFile))
-                        pageFound = page;
+                    if (!number.StartsWith("-"))
+                    {
+                        if (!String.IsNullOrEmpty(outputFile))
+                            pageFound = page;
 
-                    memberFound = true;
+                        memberFound = true;
+                    }
                 }
 
                 //// Write the progress.

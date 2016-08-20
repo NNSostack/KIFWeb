@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -38,15 +39,35 @@ public partial class KIF_SendCheckInfoMails : System.Web.UI.Page
         mm.Subject = "Opdatering af informationer for '" + medlem.Navn + "'";
 
         Guid g = Guid.NewGuid();
+
+        if (chkOnlyNotChecked.Checked)
+        {
+            DirectoryInfo di = new DirectoryInfo(Server.MapPath("~/App_Data/KIF/InfoChecks/"));
+            var files = di.GetFiles(medlem.MemberId + "-*.txt");
+            if( files.Count() != 1 )
+                throw new ApplicationException("One and only one file must exists. " + medlem.MemberId); 
+
+            var file = files.First();
+
+            int start = file.Name.IndexOf("-");
+            int end = file.Name.IndexOf(".txt", start);
+
+            if( start == -1 || end == -1 )
+                throw new ApplicationException("Not right format for member: " + medlem.MemberId);
+
+            start++;
+            g = new Guid(file.Name.Substring(start, end-start));
+
+        }
         mm.ReplyTo = new MailAddress("kiffodbold@email.dk");
         mm.Body = GetBody(medlem, g);
         mm.BodyEncoding = Encoding.UTF8; 
         mm.IsBodyHtml = true;
         mm.Bcc.Add(new MailAddress("kiffodbold@email.dk"));
 
-        System.IO.File.WriteAllText(Server.MapPath("~/App_Data/KIF/InfoChecks/" + medlem.MemberId + "-" + g + ".txt"), "InfoCheck");
-        
-        
+        if (!chkOnlyNotChecked.Checked)
+            System.IO.File.WriteAllText(Server.MapPath("~/App_Data/KIF/InfoChecks/" + medlem.MemberId + "-" + g + ".txt"), "InfoCheck");
+                
         client.Send(mm);
     }
 
@@ -72,12 +93,21 @@ public partial class KIF_SendCheckInfoMails : System.Web.UI.Page
         return list;
     }
 
+
+    protected void cleanUp_Click(object sender, EventArgs e)
+    {
+        var path = Server.MapPath("~/App_Data/KIF/InfoChecks/");
+        new System.IO.DirectoryInfo(path).GetFiles("*.txt").ToList().ForEach(x => x.Delete());
+    }
+    
     protected void showUnChecked_Click(object sender, EventArgs e)
     {
         var list = GetMembersNotChecked().OrderBy(x => x.Årgang);
+        int i = 1;
         foreach (var member in list)
         {
-            Response.Write(String.Format("{0}, {1}, {2}</br>", member.Navn, member.MemberId, member.Årgang)); 
+            Response.Write(String.Format("{3}. {0}, {1}, {2}</br>", member.Navn, member.MemberId, member.Årgang, i));
+            i++;
         }
     }
 

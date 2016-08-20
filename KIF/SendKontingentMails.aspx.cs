@@ -21,6 +21,8 @@ public partial class KIF_SendKontingentMails : System.Web.UI.Page
     {
         if (!IsPostBack)
             txtMessage.Text = mailFormat;
+
+        txtSubject.Text = "Kontingentopkrævning for '{Navn}' for " + GetSeasonAndYear();
     }
 
     String mailFormat = @"Hej
@@ -30,6 +32,8 @@ Hermed kontingentopkrævning for <b>'{0}' - {5}</b>
 <a href=""http://{1}{2}{3}?memberId={4}"" title=""Hent girokort"">Tryk her for at hente girokortet</a>
 
 Check venligst at informationerne er rigtige før I betaler.
+
+<strong>NB!! Hvis ikke kontingentindbetalingen er modtaget senest en uge efter betalingsfristen udelukkes spiller fra træning og kamp.</strong>
 
 På forhånd tak
 
@@ -163,12 +167,15 @@ Kauslunde fodbold";
     protected void showNoDownload_Click(object sender, EventArgs e)
     {
         PDFParser parser = new PDFParser();
-        var list = Medlem.GetMedlemmer().Where(x => !parser.HasGiroKortBeenDownloaded(x.MemberId)).OrderBy(x => x.Årgang).ThenBy(x => x.Navn);
+        var fullList = Medlem.GetMedlemmer();
+        var list = fullList.Where(x => !parser.HasGiroKortBeenDownloaded(x.MemberId)).OrderBy(x => x.Årgang).ThenBy(x => x.Navn);
 
         var fritaget = list.Where(x => x.Kontingentfritagelse).ToList();
         rptFritaget.DataSource = fritaget;
         rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse && PDFParser.InvoiceExists(x.MemberId)).ToList();
         rptNoInvoice.DataSource = list.Where(x => !x.Kontingentfritagelse && !PDFParser.InvoiceExists(x.MemberId)).ToList(); 
+        rptDiscount.DataSource = fullList.Where(x => !String.IsNullOrEmpty(x.Rabat)).ToList();
+        rptHasDownloaded.DataSource = fullList.Except(list);
         DataBind();
     }
     protected void cmdGetGiroKort_Click(object sender, EventArgs e)
@@ -205,5 +212,19 @@ Kauslunde fodbold";
     {
         //WebClient client = new WebClient();
         //client.DownloadFile(source, Server.MapPath("/KIF/App_Data/KIF/NotDownloaded/"); 
-    } 
+    }
+
+    protected String GetSeasonAndYear()
+    {
+        DateTime now = DateTime.Now;
+        var ret = "";
+
+        if (now.Month < 6)
+            ret = "forår ";
+        else
+            ret = "efterår ";
+
+        return ret + now.Year;
+
+    }
 }

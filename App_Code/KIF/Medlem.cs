@@ -17,8 +17,9 @@ public class Medlem
     public String By { get; set; }
     public Boolean Kontingentfritagelse { get; set; }
     public Boolean AllowEmail { get; set; }
+    public String Rabat { get; set; }
 
-    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer, kontingentfritagelse, smsEmail;
+    static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer, kontingentfritagelse, smsEmail, rabat, rabatText;
 
     public static void Initialize(String line)
     {
@@ -56,6 +57,10 @@ public class Medlem
                 kontingentfritagelse = i;
             else if (s == "SMS/Email fra klubben")
                 smsEmail = i;
+            else if (s == "Rabat")
+                rabat = i;
+            else if (s == "Årsag (Rabat)")
+                rabatText = i;
 
         }
     }
@@ -82,7 +87,11 @@ public class Medlem
         m.Fødselsdato = split[fødselsdato];
         m.Postnummer = split[postnummer];
         m.By = split[by];
+        m.Rabat = split[rabat];
 
+        if( m.Rabat != "" )
+            m.Rabat = split[rabatText] + " (" + split[rabat] + " kr.)";
+        
         Boolean b;
 
         if (split[kontingentfritagelse].ToLower() == "ja")
