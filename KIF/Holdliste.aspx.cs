@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.IO;
 
 public partial class Holdliste : System.Web.UI.Page
 {
@@ -42,6 +43,29 @@ public partial class Holdliste : System.Web.UI.Page
         if( Request.QueryString["afdeling"] != null )
             memberList.DataSource = list.Where(x => x.Årgang.StartsWith(Afdeling));
         DataBind();
+    }
+
+    FileInfo[] files = null;
+    protected Boolean MissingUpdateInfo(String memberId)
+    {
+        if (files == null)
+        {
+            DirectoryInfo di = new DirectoryInfo(Server.MapPath("~/App_Data/KIF/InfoChecks/"));
+            files = di.GetFiles("*-*.txt");
+        }
+
+        return files.Any(x => x.Name.StartsWith(memberId + "-"));
+    }
+
+    protected Boolean MissingPayment(String memberId)
+    {
+        return list.FirstOrDefault(x => x.MemberId == memberId).MissingPayment;
+    }
+
+    PDFParser parser = new PDFParser();
+    protected Boolean MissingDownload(String memberId)
+    {
+        return !parser.HasGiroKortBeenDownloaded(memberId);        
     }
 
     protected Boolean IsPrinting

@@ -18,6 +18,7 @@ public class Medlem
     public Boolean Kontingentfritagelse { get; set; }
     public Boolean AllowEmail { get; set; }
     public String Rabat { get; set; }
+    public Boolean MissingPayment { get; set; }
 
     static int fornavn, efternavn, adresse, tlf1, tlf2, email1, email2, afdeling, medlemsNr, fødselsdato, by, postnummer, kontingentfritagelse, smsEmail, rabat, rabatText;
 
@@ -65,7 +66,7 @@ public class Medlem
         }
     }
 
-    public static Medlem GetMedlem(String line)
+    public Medlem GetMedlem(String line)
     {
         Medlem m = new Medlem();
 
@@ -102,8 +103,35 @@ public class Medlem
         if (split[smsEmail].ToLower() == "ja")
             m.AllowEmail = true;
 
+        m.MissingPayment = iMissingPayment(m.MemberId);
+
         return m;
     }
+
+    String[] debitorSaldoliste = null;
+    static Object myLock = new object();
+    Boolean iMissingPayment(String memberId)
+    {
+        if (debitorSaldoliste == null)
+        {
+            lock (myLock)
+            {
+                WebClient client = new WebClient();
+                var file = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/KIF/Kontingent/Debitorsaldoliste.csv");
+                client.DownloadFile("https://dl.dropboxusercontent.com/s/dxtkzvtrjnqp10w/Debitorsaldoliste.csv?dl=0", file);
+                debitorSaldoliste = System.IO.File.ReadAllLines(file);
+            }
+        }
+
+        var item = debitorSaldoliste.FirstOrDefault(x => x.StartsWith(memberId + ";"));
+        if (item == null)
+            return false;
+
+        var items = item.Split(';');
+        return !items[5].StartsWith("-");
+    }
+
+
 
     public static List<Medlem> GetMedlemmer()
     {
@@ -124,10 +152,10 @@ public class Medlem
         String[] lines = System.IO.File.ReadAllLines(file, System.Text.Encoding.Default);
         Medlem.Initialize(lines[0]);
         var list = new List<Medlem>();
-
+        var medlem = new Medlem();
         foreach (String line in lines.Skip(1))
         {
-            list.Add(Medlem.GetMedlem(line));
+            list.Add(medlem.GetMedlem(line.Replace("\"", "")));
         }
         list = list.OrderBy(x => x.Navn).ToList();
         return list;

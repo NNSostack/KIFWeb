@@ -22,7 +22,8 @@ public partial class KIF_SendKontingentMails : System.Web.UI.Page
         if (!IsPostBack)
             txtMessage.Text = mailFormat;
 
-        txtSubject.Text = "Kontingentopkrævning for '{Navn}' for " + GetSeasonAndYear();
+        if( !Page.IsPostBack )
+            txtSubject.Text = "Kontingentopkrævning for '{Navn}' for " + GetSeasonAndYear();
     }
 
     String mailFormat = @"Hej
@@ -125,6 +126,11 @@ Kauslunde fodbold";
                             continue;
                     }
 
+                    if (chkOnlySendToMembersWithNoPayment.Checked)
+                        //  If member does not miss payment we continue and dont send
+                        if (!medlem.MissingPayment)
+                            continue;
+
                     Response.Write(medlem.Årgang + " - " + Request.RawUrl.Replace("SendKontingentMails", "Kontingent") + "?memberId=" + medlem.MemberId + "<br/>");
                 }
                 else
@@ -170,7 +176,7 @@ Kauslunde fodbold";
         var fullList = Medlem.GetMedlemmer();
         var list = fullList.Where(x => !parser.HasGiroKortBeenDownloaded(x.MemberId)).OrderBy(x => x.Årgang).ThenBy(x => x.Navn);
 
-        var fritaget = list.Where(x => x.Kontingentfritagelse).ToList();
+        var fritaget = fullList.Where(x => x.Kontingentfritagelse).ToList();
         rptFritaget.DataSource = fritaget;
         rptNoDownload.DataSource = list.Where(x => !x.Kontingentfritagelse && PDFParser.InvoiceExists(x.MemberId)).ToList();
         rptNoInvoice.DataSource = list.Where(x => !x.Kontingentfritagelse && !PDFParser.InvoiceExists(x.MemberId)).ToList(); 

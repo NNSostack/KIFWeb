@@ -57,12 +57,15 @@
                             <td><%# Container.ItemIndex + 1 %>. <%# Eval("Navn") %></td>
                             <td>
                                 <asp:PlaceHolder runat="server" Visible='<%# PDFParser.InvoiceExists(Eval("MemberId") as String) %>'>
-                                    <a href="http://www.noerup-sostack.dk/KIF/kontingent.aspx?memberid=<%# Eval("MemberId") %>" target="_blank">Giro</a>
+                                    <a href="http://kif.nørup-sostack.dk/KIF/kontingent.aspx?memberid=<%# Eval("MemberId") %>" target="_blank">Giro</a>
                             </td>
                             </asp:PlaceHolder>
                         <td><%# Eval("Adresse") %></td>
                             <td><a href="sms:<%# Eval("Telefon") %>"><%# Eval("Telefon") %></a></td>
                             <td style="width: 10px;"><%# GetEmail(Eval("Email") as String, true) %></td>
+                            <td><%# MissingUpdateInfo(Eval("MemberId") as String) ? "Mangler at opdatere info" : "" %></td>
+                            <td><%# MissingPayment(Eval("MemberId") as String) ? "Mangler at betale kontinget" : "" %></td>
+                            <td><%# MissingDownload(Eval("MemberId") as String) ? "Har ikke hentet girokort" : "" %></td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>

@@ -33,30 +33,33 @@ public class PDFParser
     #endregion
 
     static String _invoicePath = null;
+    static Object myLock = new object();
     static String GetInvoicePath()
     {
-        _invoicePath = System.Web.HttpContext.Current.Session["~/App_Data/Medlemskontingenter.pdf"] as String;    
-        
-        //if (_invoicePath == null)
+        lock (myLock)
         {
-            _invoicePath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Medlemskontingenter.pdf");
-            System.Web.HttpContext.Current.Session["~/App_Data/Medlemskontingenter.pdf"] = _invoicePath;
+            _invoicePath = System.Web.HttpContext.Current.Session["~/App_Data/Medlemskontingenter.pdf"] as String;
 
-            WebClient client = new WebClient();
+            //if (_invoicePath == null)
+            {
+                _invoicePath = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Medlemskontingenter.pdf");
+                System.Web.HttpContext.Current.Session["~/App_Data/Medlemskontingenter.pdf"] = _invoicePath;
 
-            try
-            {
-                if (System.IO.File.Exists(_invoicePath))
-                    System.IO.File.Delete(_invoicePath);
-                client.DownloadFile("https://dl.dropboxusercontent.com/s/wf28l4ajad0b8b1/Medlemskontingenter.pdf?dl=1&token_hash=AAG5LdLruF-7hfjpbk90086xAlZ2f4zuVPE-CQlmWrBZOQ&expiry=1399492074", _invoicePath);
-                                                
-            }
-            catch (Exception)
-            {
-                //throw;
+                WebClient client = new WebClient();
+
+                try
+                {
+                    if (System.IO.File.Exists(_invoicePath))
+                        System.IO.File.Delete(_invoicePath);
+                    client.DownloadFile("https://dl.dropboxusercontent.com/s/wf28l4ajad0b8b1/Medlemskontingenter.pdf?dl=1&token_hash=AAG5LdLruF-7hfjpbk90086xAlZ2f4zuVPE-CQlmWrBZOQ&expiry=1399492074", _invoicePath);
+
+                }
+                catch (Exception)
+                {
+                    //throw;
+                }
             }
         }
-
         return _invoicePath;
     }
 
